@@ -1,32 +1,48 @@
 import React, { Component } from 'react';
 import Coin from './Coin';
+import { choice } from './helpers'
 
 class FlippCoin extends Component {
     static defaultProps = {
-        face: ['head', 'tails']
+        face: [
+            { side: 'heads', imgSrc: 'headsIMG' },
+            { side: 'tails', imgSrc: 'tailsIMG' }
+        ]
     }
     constructor(props) {
         super(props);
-        this.state = { face: '', countHead: 0, countTails: 0, countFlips: 0 }
-        this.flipTheCoin = this.flipTheCoin.bind(this);
-    }
-    flipTheCoin() {
-        let res = Math.floor(Math.random() * this.props.face.length);
-        this.setState({ countFlips: this.state.countFlips + 1 })
-        if (res === 0) {
-            this.setState({ face: 'head', countHead: this.state.countHead + 1 })
-        } else {
-            this.setState({ face: 'tails', countTails: this.state.countTails + 1 })
+        this.state = {
+            face: null,
+            countHeads: 0,
+            countTails: 0,
+            countFlips: 0
         }
+        this.handleClick = this.handleClick.bind(this);
+    }
 
+
+    flipTheCoin() {
+        const newCoin = choice(this.props.face);
+        this.setState(st => {
+            return {
+                face: newCoin,
+                countFlips: st.countFlips + 1,
+                countHeads: st.countHeads + (newCoin.side === 'heads' ? 1 : 0),
+                countTails: st.countTails + (newCoin.side === 'tails' ? 1 : 0)
+            }
+        })
+    }
+    //Function to handle the click and execute flipTheCoin function 
+    handleClick(e) {
+        this.flipTheCoin();
     }
     render() {
         return (
             <div>
                 <h1>Lets Flip a Coin</h1>
-                <Coin face={this.state.face} />
-                <button onClick={this.flipTheCoin}>Flip Coin</button>
-                <p>Out of {this.state.countFlips} flips, there haven been {this.state.countHead} heads and {this.state.countTails} tails</p>
+                {this.state.face && <Coin res={this.state.face} />}
+                <button onClick={this.handleClick}>Flip Coin</button>
+                <p>Out of {this.state.countFlips} flips, there haven been {this.state.countHeads} heads and {this.state.countTails} tails</p>
             </div>
         )
     }

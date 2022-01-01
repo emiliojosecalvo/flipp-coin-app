@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
 import "./Coin.css"
-import head from "./head.jpg"
-import tails from "./tails.jpg"
+import headsIMG from "./head.jpg"
+import tailsIMG from "./tails.jpg"
 
 class Coin extends Component {
-    static defaultProps = {
-        face: 'head'
-    }
     render() {
         return (
             <div>
-                <img className='Coin-img' src={this.props.face === 'head' ? head : tails} />
+                <img className='Coin-img' src={this.props.res.side === 'heads' ? headsIMG : tailsIMG} alt={this.props.res.side} />
             </div>
         )
     }
